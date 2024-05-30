@@ -1,0 +1,17 @@
+Scientific_Name,Common_Name,Family,Herbivore,Intercept,Slope,Source,Notes
+Abudefduf abdominalis,Hawaiian Sergeant,Damselfish,Y,0.0369,3.13,Fishbase,
+Acanthurus blochii,Ringtail Surgeonfish,Surgeonfish,Y,0.0219,3.07,Fishbase,
+Parrotfish sp. ,Parrotfish sp.,Parrotfish,Y,0.0189,3.03,Fishbase,From Scarus psittacus
+Chromis agilis,Agile Chromis,Damselfish,Y,0.0369,3.13,Fishbase,From Abudefduf abdominalis
+Stegastes marginatus,Hawaiian Gregory,Damselfish,Y,0.0369,3.13,Fishbase,From Abudefduf abdominalis
+Chaetodon miliaris,Milletseed Butterflyfish,Butterflyfish,N,0.0353,2.83414,Fishbase,From Chaetodon citrinellus
+Stethojulis balteata,Belted Wrasse,Wrasse,Y,0.0155,2.89,Fishbase,From Thalassoma duperrey
+Lutjanus kasmira,Bluestripe snapper,Grunt,N,0.0117,3.136,Fishbase,
+Dascyllus albisella,Domino damselfish,Damselfish,Y,0.0313,3.04325,Fishbase,
+Goby sp.,Goby sp.,Goby,N,0.008,3.011,Fishbase,From Glossogobius giuris
+Scorpionfish sp.,Scorpionfish sp.,Scorpionfish,N,0.004,3.27,Fishbase,From Pterois volitans
+Canthigaster jactator,Hawaiian Whitespotted Toby,Pufferfish,N,0.0634,2.755,Fishbase,From Arothron hispidus
+Aulostomus chinensis,Pacific Trumpetifsh,Trumpetfish,N,0.0001,3.793,Fishbase,
+Zebrasoma flavescens,Yellow Tang,Surgeonfish,Y,0.0264,3.01,Fishbase,
+Acanthurus triostegas,Convict Tang,Surgeonfish,Y,0.0213,3.081,Fishbase,
+Arothron hispidus,Stripebelly Pufferfish,Pufferfish,N,0.0634,2.755,Fishbase,
