@@ -9,3 +9,5 @@
 #Model_Figures.R creates the modeling figures (Figure 3, 5, S3)
 
 #Simulated_Sampling.R creates the simulated sampling figure (Figure 6, S4)
+
+#reef_distances.R has the calculations for the two versions of Clark Evans R

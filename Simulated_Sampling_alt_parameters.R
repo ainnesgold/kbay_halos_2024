@@ -352,8 +352,8 @@ initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
 q_values <- numeric(length(times))
 
 #Define parameters
-parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
-#parameters <- c(A0 = 0.5, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 2, m = 0.03)
+#parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
+parameters <- c(A0 = 0.5, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 2, m = 0.03)
 
 
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)

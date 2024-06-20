@@ -148,8 +148,8 @@ a_gg <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A, color=as.
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
   guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
-  ggtitle("A. Fixed baseline (R = 0.13)") +
-  scale_y_continuous(limits = c(0, 0.6))
+  ggtitle("A. Fixed baseline (R = 0.13)") #+
+  #scale_y_continuous(limits = c(0, 0.6))
 
 
 
