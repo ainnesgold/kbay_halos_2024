@@ -143,9 +143,6 @@ full_data <- full_data %>%
 
 ############################# NUTRIENTS #################################################
 
-nutrient_raw <- read.csv("Data/nutrients_combined.csv")
-colnames(nutrient_raw)[colnames(nutrient_raw) == "Reef_Number"] <- "Reef"
-nutrient_raw$Reef <- paste0("R", nutrient_raw$Reef)
 
 full_data <- merge(full_data, nutrient_raw, by = c("Month", "Year", "Reef"), all = TRUE)
 
@@ -295,6 +292,9 @@ p10<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) +
 #ggarrange(p1, p2, p3, p5, p6, p7, p8, p9, p10, p4, nrow=4, ncol=3, common.legend = TRUE) #pdf 12 x 15
 #ggarrange(p1, p2, p3, NULL, p5, p6, p7, NULL, p8, p9, p10, p4, nrow=3, ncol=4, common.legend = TRUE) #pdf 12 x 15
 
+
+
+############ FIGURE S3 ####################
 #just nutrients included in analysis
 ggarrange(p1, p2, p3, p5, p6, p7, p4, nrow=2, ncol=4, common.legend = TRUE)
 
@@ -311,7 +311,7 @@ ggarrange(p1, p2, p3, p5, p6, p7, p4, nrow=2, ncol=4, common.legend = TRUE)
 ############################## HALO SIZE #############################################
 
 #
-#halo only data - SST significant
+#halo only data
 
 m1_gam <- gam(halosize ~ mean_cover +
                 s(rolling_average_14, k = 6) +
@@ -321,8 +321,6 @@ m1_gam <- gam(halosize ~ mean_cover +
               data = full_data_halos_only)
 
 summary(m1_gam)
-#gam.check(m1_gam)
-#k.check(m1_gam)
 
 #Plot of significant predictor
 p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) + 
@@ -352,8 +350,6 @@ m1_gam <- gam(cbind(I(round(halo_veg_cover*100)), 100)  ~ s(mean_cover, k=3) +
 
 
 summary(m1_gam)
-#gam.check(m1_gam)
-#plot(m1_gam)
 
 
 #plots of significant predictors
@@ -456,7 +452,6 @@ summary(binom_m1)
 hist(binomial_df$binom_halo1)
 
 #plots of significant predictors
-#fish biomass plot - looks weird because interaction is not accounted for - interaction plot is clearer
 ggplot(binomial_df, aes(x = total_mass_herbivore, y = binom_halo1)) +
   geom_point() +
   labs(y="Halo presence", x=expression('Herbivorous fish biomass (g/m'^2*')')) +
@@ -544,6 +539,9 @@ p2<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value
   ggtitle("B.")+
   theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1), text = element_text(size = 20))
 
+
+
+###FIGURE S2
 ggarrange(p1, p2)
 
 

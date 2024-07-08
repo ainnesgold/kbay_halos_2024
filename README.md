@@ -4,10 +4,12 @@
 
 #All data are in csv files in the data folder
 
-#field_data_analysis.R contains all the statistical models and creates field data figures (Figures 4, S1, S2)
+#field_data_analysis.R contains all the statistical models and creates field data figures (Figures 4, S2, S3)
 
-#Model_Figures.R creates the modeling figures (Figure 3, 5, S3)
+#Model_Figures.R creates the modeling figures (Figure 3, 5, S4)
 
-#Simulated_Sampling.R creates the simulated sampling figure (Figure 6, S4)
+#Simulated_Sampling.R creates the simulated sampling figure (Figure 6, S5)
+
+#Simulated_Sampling.alt_parameters.R creates Figure S6
 
 #reef_distances.R has the calculations for the two versions of Clark Evans R

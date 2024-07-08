@@ -195,8 +195,6 @@ p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) +
 
 ########################### HIGH 28 OPTIMAL TEMP #
 
-# Assuming your combined_df has a column named 'Time'
-
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
@@ -469,8 +467,6 @@ p6<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) +
 
 ######################### alternate time point sampling #####################################
 
-# Define the limits
-
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
@@ -619,8 +615,6 @@ p8<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) +
 
 
 ######################### alternate time point sampling #####################################
-
-# Define the limits
 
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%

@@ -6,12 +6,6 @@ library(spatstat)
 # Load the leaflet package
 library(leaflet)
 
-# Assuming df is your dataframe
-#df <- data.frame(
- # reef = c("Reef 1", "Reef 2", "Reef 3"),
-#  lon = c(-157.806396, -157.806473, -157.806783),
- # lat = c(21.464275, 21.464012, 21.46402)
-#)
 
 #just around AR1 - bigger R, more dispersed - 
 #if they had bigger home ranges, smaller R
