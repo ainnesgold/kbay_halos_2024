@@ -8,13 +8,13 @@ library(reshape2)
 
 
 #Read in Vegetation Data
-#Dava's data
+#data sheet 1
 raw <- read.csv("Data/halo_data_dava.csv", na.strings=c("","NA"))
 
-#Josh's data
+#data sheet 2
 raw2 <- read.csv("Data/halo_data_josh.csv", na.strings=c("","NA"))
 
-#Ann's data
+#data sheet 3
 raw3 <- read.csv("Data/halo_data_ann.csv", na.strings=c("","NA"))
 
 #Combine them
