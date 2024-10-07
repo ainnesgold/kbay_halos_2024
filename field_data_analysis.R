@@ -292,6 +292,8 @@ p10<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) +
 #ggarrange(p1, p2, p3, p5, p6, p7, p8, p9, p10, p4, nrow=4, ncol=3, common.legend = TRUE) #pdf 12 x 15
 #ggarrange(p1, p2, p3, NULL, p5, p6, p7, NULL, p8, p9, p10, p4, nrow=3, ncol=4, common.legend = TRUE) #pdf 12 x 15
 
+write.csv(full_data, "full_data.csv")
+write.csv(full_data_halos_only, "full_data_halos_only.csv")
 
 
 ############ FIGURE S3 ####################

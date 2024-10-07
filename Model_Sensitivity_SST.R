@@ -136,20 +136,23 @@ for (i in 2:length(combined_df$Time)) {
 }
 combined_df$q <- q_values
 
-a_gg <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A, color=as.factor(T_opt))) +
+
+A0 <- 0.8
+
+a_gg <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
   geom_line(size=1) +
   geom_line(data = solution_stable %>% 
-              filter(time >=200), aes(x = time-200, y = A_stable_baseline), 
+              filter(time >=200), aes(x = time-200, y = A0 - A_stable_baseline), 
             color = "black", linetype = "dashed", size = 1) +
   scale_color_viridis_d() +
   theme_minimal() +
-  labs(x="Time (days)", y = "Seagrass density") +
+  labs(x="Time (days)", y = "Relative halo width") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
   guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
-  ggtitle("A. Fixed baseline (R = 0.13)") #+
-  #scale_y_continuous(limits = c(0, 0.6))
+  ggtitle("A. Fixed baseline (R = 0.13)") +
+scale_y_continuous(limits = c(0.2, 0.8))
 
 
 
@@ -219,18 +222,18 @@ for (i in 2:length(combined_df$Time)) {
 }
 combined_df$q <- q_values
 
-a_gg2 <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A, color=as.factor(T_opt))) +
+a_gg2 <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
   geom_line(size=1) +
-  geom_line(data = solution_cycles %>% filter(time >=200), aes(x = time-200, y = A_cycles_baseline), color = "black", linetype = "dashed", size = 1) +
+  geom_line(data = solution_cycles %>% filter(time >=200), aes(x = time-200, y = A0 - A_cycles_baseline), color = "black", linetype = "dashed", size = 1) +
   scale_color_viridis_d() +
   theme_minimal() +
-  labs(x="Time (days)", y = "Seagrass density") +
+  labs(x="Time (days)", y = "Relative halo width") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
   guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
   ggtitle("B. Cyclic baseline (R = 1.28)") +
-  scale_y_continuous(limits = c(0, 0.6))
+  scale_y_continuous(limits = c(0.2, 0.8))
 
 
 h_gg2<-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=H, color=as.factor(T_opt))) +
@@ -258,5 +261,5 @@ sst_plot<-ggplot(sst_df %>% filter(Time > 200), aes(x = Time-200, y = SST)) +
   ggtitle("A.")+
   theme(text = element_text(size = 20))
 
-#Figure 4
+#Figure 5
 ggarrange(a_gg, h_gg, a_gg2, h_gg2, nrow=2, ncol=2, common.legend = TRUE, legend="right") #12 x 8

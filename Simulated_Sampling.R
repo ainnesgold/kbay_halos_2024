@@ -12,6 +12,7 @@ q_values <- numeric(length(times))
 #Define parameters - stable
 parameters <- c(A0 = 0.8, R = 0.13, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 
+
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
 #
@@ -45,14 +46,16 @@ combined_df$q <- q_values
 # Define the limits
 herbivore_limits <- c(0.94, 0.95)
 seagrass_limits <- c(0.45, 0.55)
+A0 = 0.8
 
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits))
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
@@ -78,7 +81,7 @@ p1<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Relative halo width", 
                         breaks = seq(seagrass_limits[1], seagrass_limits[2], by = 0.025), 
                         labels = number_format(accuracy = 0.01))
   ) +
@@ -108,11 +111,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
-p2<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p2<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -125,8 +128,10 @@ filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits))
+
 
 # Create a sequence of time points at every 30 units
 #time points 2
@@ -152,7 +157,7 @@ p1_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Relative halo width", 
                         breaks = seq(seagrass_limits[1], seagrass_limits[2], by = 0.025), 
                         labels = number_format(accuracy = 0.01))
   ) +
@@ -182,11 +187,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
-p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -194,16 +199,14 @@ p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) +
 
 
 ########################### HIGH 28 OPTIMAL TEMP #
-
-# Assuming your combined_df has a column named 'Time'
-
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits))
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
@@ -229,7 +232,7 @@ p3<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Relative halo width", 
                         breaks = seq(seagrass_limits[1], seagrass_limits[2], by = 0.025), 
                         labels = number_format(accuracy = 0.01))
   ) +
@@ -259,11 +262,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
-p4<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p4<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -277,8 +280,9 @@ filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits))
 
 # Create a sequence of time points at every 30 units
 #time points 2
@@ -304,7 +308,7 @@ p3_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits), name = "Relative halo width", 
                         breaks = seq(seagrass_limits[1], seagrass_limits[2], by = 0.025), 
                         labels = number_format(accuracy = 0.01))
   ) +
@@ -334,11 +338,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
-p4_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p4_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -400,8 +404,9 @@ filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits2))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
@@ -427,7 +432,7 @@ p5<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits2, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Relative halo width", 
                         breaks = seq(seagrass_limits2[1], seagrass_limits2[2], by = 0.1), 
                         labels = number_format(accuracy = 0.1))
   ) +
@@ -457,11 +462,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
-p6<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p6<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -474,8 +479,9 @@ filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits2))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
 #time points 2
@@ -501,7 +507,7 @@ p5_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits2, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Relative halo width", 
                         breaks = seq(seagrass_limits2[1], seagrass_limits2[2], by = 0.1), 
                         labels = number_format(accuracy = 0.1))
   ) +
@@ -531,11 +537,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
-p6_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p6_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -547,8 +553,9 @@ filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits2))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
@@ -574,7 +581,7 @@ p7<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits2, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Relative halo width", 
                         breaks = seq(seagrass_limits2[1], seagrass_limits2[2], by = 0.1), 
                         labels = number_format(accuracy = 0.1))
   ) +
@@ -604,11 +611,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
-p8<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p8<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
@@ -621,8 +628,9 @@ filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
 
+filtered_data$halosize <- A0 - filtered_data$A
 filtered_data <- filtered_data %>%
-  mutate(A_scaled = scales::rescale(A, to = herbivore_limits2))
+  mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
 #time points 2
@@ -648,7 +656,7 @@ p7_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   scale_y_continuous(
     name = "Herbivore density", 
     limits = herbivore_limits2, 
-    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Seagrass density", 
+    sec.axis = sec_axis(~ scales::rescale(., to = seagrass_limits2), name = "Relative halo width", 
                         breaks = seq(seagrass_limits2[1], seagrass_limits2[2], by = 0.1), 
                         labels = number_format(accuracy = 0.1))
   ) +
@@ -678,11 +686,11 @@ overlay_data <- merge(overlay_data, sst_df, by = "Time")
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
-p8_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A)) + 
+p8_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) + 
   geom_point(size=3) +
-  labs(x = "Herbivore density", y = "SST (°C)", color = "Seagrass density") +
+  labs(x = "Herbivore density", y = "SST (°C)", color = "Relative halo width") +
   ggtitle("") +
-  scale_color_viridis_c(option="viridis", direction = -1) +
+  scale_color_viridis_c(option="viridis") +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
