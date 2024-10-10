@@ -466,7 +466,7 @@ summary(m1_lme)
 #table of results
 model_summary <- tidy(m1_lme)
 model_summary %>%
-  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "P value")) %>%
+  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
   add_header_above(c("Mean Vegetation Model Output" = 7))  # Adding a header
 
@@ -512,7 +512,7 @@ hist(binomial_df$binom_halo1)
 #table of results
 model_summary <- tidy(binom_m1)
 model_summary %>%
-  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "P value")) %>%
+  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
   add_header_above(c("Halo Presence Model Output" = 7))
 
