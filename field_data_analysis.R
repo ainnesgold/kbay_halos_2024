@@ -5,6 +5,8 @@ library(lubridate)
 library(RcppRoll)
 library(lmerTest)
 library(reshape2)
+library(broom.mixed)
+library(kableExtra)
 
 
 #Read in Vegetation Data
@@ -324,6 +326,28 @@ m1_gam <- gam(halosize ~ mean_cover +
 
 summary(m1_gam)
 
+# Extract fixed effects
+fixed_terms <- tidy(m1_gam, parametric = TRUE)
+
+# Extract smooth terms
+smooth_terms <- tidy(m1_gam, parametric = FALSE)
+
+# Format the fixed effects table
+fixed_table <- fixed_terms %>%
+  kbl(digits = 3, col.names = c("Term", "Estimate", "Std. Error", "t-value", "p-value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Halo Width - Fixed Effects" = 5))
+
+# Format the smooth terms table
+smooth_table <- smooth_terms %>%
+  kbl(digits = 3, col.names = c("Smooth Term", "Estimated df", "Reference df", "F Statistic", "p-value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Halo Width - Smooth Terms" = 5))
+
+# Display the tables in your R environment
+fixed_table
+smooth_table
+
 #Plot of significant predictor
 p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) + 
   geom_point(position="jitter") +
@@ -352,6 +376,28 @@ m1_gam <- gam(cbind(I(round(halo_veg_cover*100)), 100)  ~ s(mean_cover, k=3) +
 
 
 summary(m1_gam)
+
+# Extract fixed effects
+fixed_terms <- tidy(m1_gam, parametric = TRUE)
+
+# Extract smooth terms
+smooth_terms <- tidy(m1_gam, parametric = FALSE)
+
+# Format the fixed effects table
+fixed_table <- fixed_terms %>%
+  kbl(digits = 3, col.names = c("Term", "Estimate", "Std. Error", "t-value", "p-value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Halo Veg Density - Fixed Effects" = 5))
+
+# Format the smooth terms table
+smooth_table <- smooth_terms %>%
+  kbl(digits = 3, col.names = c("Smooth Term", "Estimated DF", "Reference df", "F Statistic", "p-value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Halo Veg Density - Smooth Terms" = 5))
+
+# Display the tables in your R environment
+fixed_table
+smooth_table
 
 
 #plots of significant predictors
@@ -416,6 +462,17 @@ m1_lme <- glmer(
 )
 summary(m1_lme)
 
+
+#table of results
+model_summary <- tidy(m1_lme)
+model_summary %>%
+  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "P value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Mean Vegetation Model Output" = 7))  # Adding a header
+
+
+
+
 #checking residuals
 plot(m1_lme, which = 1)  # Residuals vs. Fitted
 residuals <- residuals(m1_lme)
@@ -449,9 +506,18 @@ binomial_df$binom_halo2 <- ifelse(binomial_df$halosize2 > 0, 1, 0)
 binom_m1 <- glmer(binom_halo1 ~ rolling_average_14 + total_mass_herbivore + mean_cover +
                     rolling_average_14 * total_mass_herbivore +
                     (1 | Reef) + (1 | Month), data = binomial_df, family = binomial)
-
 summary(binom_m1)
 hist(binomial_df$binom_halo1)
+
+#table of results
+model_summary <- tidy(binom_m1)
+model_summary %>%
+  kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "P value")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
+  add_header_above(c("Halo Presence Model Output" = 7))
+
+
+
 
 #plots of significant predictors
 ggplot(binomial_df, aes(x = total_mass_herbivore, y = binom_halo1)) +
