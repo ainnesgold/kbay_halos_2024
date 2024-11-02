@@ -59,11 +59,9 @@ sst_function_plot <- ggplot(data_sg, aes(x = x, y = y, color = T_opt)) +
   guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
   theme(text = element_text(size = 20))
 
-# Print the plot
-#print(sst_function_plot)
+
 
 #################################### MODEL SET UP ####################################
-#T_opt <- 25
 
 # Define the ODE system
 ode_system_sst <- function(t, y, parms, sst_values2, T_opt) {
@@ -196,7 +194,6 @@ parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03
 
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-#
 # Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 

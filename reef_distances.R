@@ -7,9 +7,7 @@ library(spatstat)
 library(leaflet)
 
 
-#just around AR1 - bigger R, more dispersed - 
-#if they had bigger home ranges, smaller R
-#importance of the scale of the system
+#just around AR1 - bigger R, more dispersed 
 
 df <- data.frame(
   reef = c("Reef 1.1", "Reef 1.2", "Reef 1.3","Reef 1.4","Reef 1.5","Reef 1.6","Reef 1.7","Reef 1.8","Reef 1.9","Reef 1.10",
@@ -48,7 +46,7 @@ clarkevans(ppp_object)
 
 
 
-#INCLUDING SURROUNDING NATURAL REEFS
+#INCLUDING SURROUNDING NATURAL REEFS - more clustered
 df <- data.frame(
   reef = c(paste0("Reef 1.", 1:20), paste0("Reef 2.", 1:20), paste0("Reef 3.", 1:20), paste0("Reef 4.", 1:20),  paste0("Reef 5.", 1:20)
   ),

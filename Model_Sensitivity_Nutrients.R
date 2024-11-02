@@ -42,7 +42,7 @@ data_sg_list <- lapply(slope_values, function(slope) {
 # Combine all dataframes into one
 data_sg <- do.call(rbind, data_sg_list)
 
-# Create the plot using ggplot2
+# Create the plot
 nutrient_function_plot <- ggplot(data_sg, aes(x = x, y = y, color = slope)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d()+
@@ -53,10 +53,6 @@ nutrient_function_plot <- ggplot(data_sg, aes(x = x, y = y, color = slope)) +
   guides(color = guide_legend(label.wrap = 20, title="Slope parameter")) +
   theme(text = element_text(size = 20))
 
-# Print the plot
-#print(nutrient_function_plot)
-
-###############################
 
 #################################### MODEL SET UP ####################################
 
@@ -93,7 +89,6 @@ q_values <- numeric(length(times))
 parameters <- c(A0 = 0.8, R = 0.13, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 
 #Sensitivity code
-# Define function for sensitivity analysis
 perform_sensitivity_analysis <- function(slope_values) {
   results <- list()
   for (slope in slope_values) {
@@ -192,6 +187,7 @@ q_values <- numeric(length(times))
 #Define parameters
 parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 sensitivity_results <- perform_sensitivity_analysis(slope_values)
+
 # Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 

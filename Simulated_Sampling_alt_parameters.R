@@ -211,7 +211,6 @@ filtered_data <- filtered_data %>%
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
-#time_points <- seq(min(filtered_data$Time), max(filtered_data$Time), by = 30)
 
 # Calculate intersection points
 intersection_points <- filtered_data %>%
@@ -239,7 +238,6 @@ p3<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("B. Fixed; Optimal SST = 28°C") +
   theme_minimal() +
@@ -315,7 +313,6 @@ p3_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("B. Fixed; Optimal SST = 28°C") +
   theme_minimal() +
@@ -357,7 +354,6 @@ initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
 q_values <- numeric(length(times))
 
 #Define parameters
-#parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 parameters <- c(A0 = 0.5, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 2, m = 0.03)
 
 
@@ -489,7 +485,6 @@ filtered_data <- filtered_data %>%
   mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
-#time points 2
 time_points2 <- seq(215, max(combined_df$Time), by = 30)
 
 # Calculate intersection points
@@ -518,7 +513,6 @@ p5_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("C. Cyclic; Optimal SST = 24°C") +
   theme_minimal() +
@@ -553,8 +547,6 @@ p6_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ########################### HIGH 28 OPTIMAL TEMP #
 
-# Assuming your combined_df has a column named 'Time'
-
 # Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
@@ -566,7 +558,6 @@ filtered_data <- filtered_data %>%
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
-#time_points <- seq(min(filtered_data$Time), max(filtered_data$Time), by = 30)
 
 # Calculate intersection points
 intersection_points <- filtered_data %>%
@@ -640,7 +631,6 @@ filtered_data <- filtered_data %>%
   mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
-#time points 2
 time_points2 <- seq(215, max(combined_df$Time), by = 30)
 
 # Calculate intersection points
@@ -712,5 +702,5 @@ ggarrange(p1+rremove("xlab"),p3 +rremove("xlab"),p5 +rremove("xlab"),p7, nrow=4,
 ggarrange(p2+rremove("xlab"),p4+rremove("xlab"),p6+rremove("xlab"),p8, nrow=4, ncol=1)
 
 
-#Figure S4
+#Figure S5
 ggarrange(p1_extra, p2_extra, p3_extra, p4_extra, p5_extra, p6_extra, p7_extra, p8_extra, nrow=4, ncol=2)
