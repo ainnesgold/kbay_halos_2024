@@ -49,12 +49,12 @@ data_sg_list <- lapply(T_opt_values, function(T_opt) {
 data_sg <- do.call(rbind, data_sg_list)
 
 # Create the plot using ggplot2
-sst_function_plot <- ggplot(data_sg, aes(x = x, y = y, color = T_opt)) +
+sst_function_plot <- ggplot(data_sg %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28), aes(x = x, y = y, color = T_opt)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d()+
   labs(title = "B.",
        x = "SST (°C)",
-       y = "Seagrass growth rate") +
+       y = "Vegetation growth rate") +
   theme_minimal() +
   guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
   theme(text = element_text(size = 20))
@@ -137,7 +137,8 @@ combined_df$q <- q_values
 
 A0 <- 0.8
 
-a_gg <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
+a_gg <-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28),
+              aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
   geom_line(size=1) +
   geom_line(data = solution_stable %>% 
               filter(time >=200), aes(x = time-200, y = A0 - A_stable_baseline), 
@@ -154,7 +155,8 @@ scale_y_continuous(limits = c(0.2, 0.8))
 
 
 
-h_gg<-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=H, color=as.factor(T_opt))) +
+h_gg<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28), 
+             aes(x=Time-200, y=H, color=as.factor(T_opt))) +
   geom_line(size=1) +
   geom_line(data = solution_stable %>% filter(time >=200), aes(x = time-200, y = H_stable_baseline), color = "black", linetype = "dashed", size = 1) +
   scale_color_viridis_d() +
@@ -169,11 +171,12 @@ h_gg<-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=H, color=as.f
 
 
 
-q_gg_sst<-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=q, color=as.factor(T_opt))) +
+q_gg_sst<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28),
+                 aes(x=Time-200, y=q, color=as.factor(T_opt))) +
   geom_line(size=1) +
   scale_color_viridis_d() +
   theme_minimal() +
-  labs(x="Time (days)", y = "Seagrass growth rate") +
+  labs(x="Time (days)", y = "Vegetation growth rate") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
@@ -219,7 +222,8 @@ for (i in 2:length(combined_df$Time)) {
 }
 combined_df$q <- q_values
 
-a_gg2 <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
+a_gg2 <-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28),
+               aes(x=Time-200, y=A0 - A, color=as.factor(T_opt))) +
   geom_line(size=1) +
   geom_line(data = solution_cycles %>% filter(time >=200), aes(x = time-200, y = A0 - A_cycles_baseline), color = "black", linetype = "dashed", size = 1) +
   scale_color_viridis_d() +
@@ -233,7 +237,8 @@ a_gg2 <-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=A0 - A, col
   scale_y_continuous(limits = c(0.2, 0.8))
 
 
-h_gg2<-ggplot(combined_df %>% filter(Time >=200), aes(x=Time-200, y=H, color=as.factor(T_opt))) +
+h_gg2<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28),
+              aes(x=Time-200, y=H, color=as.factor(T_opt))) +
   geom_line(size=1) +
   geom_line(data = solution_cycles %>% filter(time >=200), aes(x = time-200, y = H_cycles_baseline), color = "black", linetype = "dashed", size = 1) +
   scale_color_viridis_d() +

@@ -43,12 +43,12 @@ data_sg_list <- lapply(slope_values, function(slope) {
 data_sg <- do.call(rbind, data_sg_list)
 
 # Create the plot
-nutrient_function_plot <- ggplot(data_sg, aes(x = x, y = y, color = slope)) +
+nutrient_function_plot <- ggplot(data_sg %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), aes(x = x, y = y, color = slope)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d()+
   labs( title = "E.",
         x = "Total N (ug/L)",
-        y = "Seagrass growth rate") +
+        y = "Vegetation growth rate") +
   theme_minimal() +
   guides(color = guide_legend(label.wrap = 20, title="Slope parameter")) +
   theme(text = element_text(size = 20))
@@ -133,7 +133,8 @@ combined_df$q <- q_values
 #seagrass plot
 A0 = 0.8
 
-a_gg <- ggplot(combined_df %>% filter(Time >= 200), aes(x=Time-200, y=A0 - A, color=factor(slope, levels = rev(levels(factor(slope)))))) +
+a_gg <- ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
+               aes(x=Time-200, y=A0 - A, color=factor(slope, levels = rev(levels(factor(slope)))))) +
   geom_line(size=1) +
   geom_line(data = solution_stable %>% filter(time >=200 & time < 620), aes(x = time-200, y = A0 - A_stable_baseline), 
             color = "black", linetype = "dashed", size = 1) +
@@ -148,7 +149,8 @@ a_gg <- ggplot(combined_df %>% filter(Time >= 200), aes(x=Time-200, y=A0 - A, co
   #scale_y_continuous(limits = c(0, 0.6))
 
 #herbivore plot
-h_gg<-ggplot(combined_df %>% filter(Time >= 200), aes(x=Time-200, y=H, color=factor(slope, levels = rev(levels(factor(slope)))))) +
+h_gg<-ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
+             aes(x=Time-200, y=H, color=factor(slope, levels = rev(levels(factor(slope)))))) +
   geom_line(size=1) +
   geom_line(data = solution_stable %>% filter(time >= 200 & time < 620), aes(x = time-200, y = H_stable_baseline), 
             color = "black", linetype = "dashed", size = 1) +
@@ -163,11 +165,12 @@ h_gg<-ggplot(combined_df %>% filter(Time >= 200), aes(x=Time-200, y=H, color=fac
   scale_y_continuous(limits = c(0, 1))
 
 #plot of seagrass growth rates
-q_gg_nutrients<-ggplot(combined_df %>% filter(Time >= 200), aes(x=Time-200, y=q, color=factor(slope, levels = rev(levels(factor(slope)))))) +
+q_gg_nutrients<-ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
+                       aes(x=Time-200, y=q, color=factor(slope, levels = rev(levels(factor(slope)))))) +
   geom_line(size=1) +
   scale_color_viridis_d() +
   theme_minimal() +
-  labs(x="Time (days)", y = "Seagrass growth rate") +
+  labs(x="Time (days)", y = "Vegetaion growth rate") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
@@ -214,7 +217,8 @@ for (i in 2:length(combined_df$Time)) {
 combined_df$q <- q_values
 
 
-a_gg2 <-ggplot(combined_df %>% filter(Time > 200), aes(x=Time-200, y=A0 - A, color=factor(slope, levels = rev(levels(factor(slope)))))) +
+a_gg2 <-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
+               aes(x=Time-200, y=A0 - A, color=factor(slope, levels = rev(levels(factor(slope)))))) +
   geom_line(size=1) +
   geom_line(data = solution_cycles %>% filter(time > 200 & time < 620), 
             aes(x = time-200, y = A0 - A_cycles_baseline), color = "black", linetype = "dashed", size = 1) +
@@ -230,7 +234,8 @@ a_gg2 <-ggplot(combined_df %>% filter(Time > 200), aes(x=Time-200, y=A0 - A, col
 
 
 
-h_gg2<-ggplot(combined_df %>% filter(Time > 200), aes(x=Time-200, y=H, color=factor(slope, levels = rev(levels(factor(slope)))))) +
+h_gg2<-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
+              aes(x=Time-200, y=H, color=factor(slope, levels = rev(levels(factor(slope)))))) +
   geom_line(size=1) +
   geom_line(data = solution_cycles %>% filter(time > 200 & time < 620), 
             aes(x = time-200, y = H_cycles_baseline), color = "black", linetype = "dashed", size = 1) +

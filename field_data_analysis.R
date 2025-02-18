@@ -178,6 +178,11 @@ full_data_halos_only$Reef2 <- ifelse(full_data_halos_only$Reef == "R1", 1,
                                             ifelse(full_data_halos_only$Reef == "R3", 3, full_data_halos_only$Reef)))
 full_data_halos_only$Reef2 <- as.numeric(full_data_halos_only$Reef2)
 
+####### Looking at non herbivores
+full_data$total_mass_nonherbivore <- full_data$total_mass - full_data$total_mass_herbivore
+full_data_halos_only$total_mass_nonherbivore <- full_data_halos_only$total_mass - full_data_halos_only$total_mass_herbivore
+
+
 
 ##General trends over time
 p1<-ggplot(full_data, aes(x = Date, y = halosize, color = Reef)) + 
@@ -235,7 +240,18 @@ p5<-ggplot(full_data, aes(x = Date, y = total_mass_herbivore, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-p6<-ggplot(full_data, aes(x = Date, y = N.N, color = Reef)) + 
+p6<-ggplot(full_data, aes(x = Date, y = total_mass_nonherbivore, color = Reef)) + 
+  geom_line(linewidth = 1) +
+  labs(x = NULL, y = expression('Non herbivore biomass (g/m'^2*')')) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 20),  # Set text size to 20
+    axis.title = element_text(size = 20),  # Set axis title size to 20
+    axis.text = element_text(size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
+  )
+
+p7<-ggplot(full_data, aes(x = Date, y = N.N, color = Reef)) + 
   geom_line(linewidth = 1) +
   labs(x = NULL, y = "N+N (µmol/L)") +
   theme_minimal() +
@@ -246,7 +262,7 @@ p6<-ggplot(full_data, aes(x = Date, y = N.N, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-p7<-ggplot(full_data, aes(x = Date, y = Phosphate, color = Reef)) + 
+p8<-ggplot(full_data, aes(x = Date, y = Phosphate, color = Reef)) + 
   geom_line(linewidth = 1) +
   labs(x = NULL, y = "Phosphate (µmol/L)") +
   theme_minimal() +
@@ -257,7 +273,7 @@ p7<-ggplot(full_data, aes(x = Date, y = Phosphate, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-p8<-ggplot(full_data, aes(x = Date, y = Sillicate, color = Reef)) + 
+p9<-ggplot(full_data, aes(x = Date, y = Sillicate, color = Reef)) + 
   geom_line(linewidth = 1) +
   labs(x = NULL, y = "Silicate (µmol/L)") +
   theme_minimal() +
@@ -268,7 +284,7 @@ p8<-ggplot(full_data, aes(x = Date, y = Sillicate, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-p9<-ggplot(full_data, aes(x = Date, y = Ammonia, color = Reef)) + 
+p10<-ggplot(full_data, aes(x = Date, y = Ammonia, color = Reef)) + 
   geom_line(linewidth = 1) +
   labs(x = NULL, y = "Ammonia (µmol/L)") +
   theme_minimal() +
@@ -279,7 +295,7 @@ p9<-ggplot(full_data, aes(x = Date, y = Ammonia, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-p10<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) + 
+p11<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) + 
   geom_line(linewidth = 1) +
   labs(x = NULL, y = "Chl (µg/L)") +
   theme_minimal() +
@@ -300,7 +316,9 @@ write.csv(full_data_halos_only, "full_data_halos_only.csv")
 
 ############ FIGURE S3 ####################
 #just nutrients included in analysis
-ggarrange(p1, p2, p3, p5, p6, p7, p4, nrow=2, ncol=4, common.legend = TRUE)
+figureS2 <- ggarrange(p1, p2, p3, p5, p6, p7, p8, p4, nrow=2, ncol=4, common.legend = TRUE)
+ 
+ggsave("~/Desktop/FigureS2.png", plot = figureS2, width = 14, height = 8, bg = "transparent")
 
 #can save as csvs
 #write.csv(full_data, "full_data.csv")
@@ -320,6 +338,7 @@ ggarrange(p1, p2, p3, p5, p6, p7, p4, nrow=2, ncol=4, common.legend = TRUE)
 m1_gam <- gam(halosize ~ mean_cover +
                 s(rolling_average_14, k = 6) +
                 total_mass_herbivore +
+                total_mass_nonherbivore +
                 s(rolling_average_14, by = total_mass_herbivore) +
                 s(Month, Reef2, bs="re"),
               data = full_data_halos_only)
@@ -363,12 +382,17 @@ p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) +
 
 
 
+
+
+
+
 ################################# HALO VEG DENSITY #############################################
 
 #mixed effects
 m1_gam <- gam(cbind(I(round(halo_veg_cover*100)), 100)  ~ s(mean_cover, k=3) +
                 rolling_average_14 +
                 total_mass_herbivore +
+                total_mass_nonherbivore +
                 rolling_average_14*total_mass_herbivore +
                 s(Month, Reef2, bs="re"),
               family = binomial,
@@ -443,6 +467,11 @@ p3<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_1
         axis.text = element_text(size = 20)  # Set axis text size to 20
   )
 
+
+
+
+
+
 ############################## MEAN VEGETATION #############################################
 
 #one crazy outlier for phosphate, filtered it out here
@@ -463,8 +492,11 @@ m1_lme <- glmer(
 summary(m1_lme)
 
 
+
 #table of results
 model_summary <- tidy(m1_lme)
+
+#Table S2
 model_summary %>%
   kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
@@ -503,7 +535,7 @@ binomial_df <- full_data
 binomial_df$binom_halo1 <- ifelse(binomial_df$halosize > 0, 1, 0)
 binomial_df$binom_halo2 <- ifelse(binomial_df$halosize2 > 0, 1, 0)
 
-binom_m1 <- glmer(binom_halo1 ~ rolling_average_14 + total_mass_herbivore + mean_cover +
+binom_m1 <- glmer(binom_halo1 ~ rolling_average_14 + total_mass_herbivore + total_mass_nonherbivore + mean_cover +
                     rolling_average_14 * total_mass_herbivore +
                     (1 | Reef) + (1 | Month), data = binomial_df, family = binomial)
 summary(binom_m1)
@@ -511,12 +543,12 @@ hist(binomial_df$binom_halo1)
 
 #table of results
 model_summary <- tidy(binom_m1)
+
+#Table S3
 model_summary %>%
   kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
   add_header_above(c("Halo Presence Model Output" = 7))
-
-
 
 
 #plots of significant predictors
@@ -539,6 +571,7 @@ mass_range <- seq(min(binomial_df$total_mass_herbivore), max(binomial_df$total_m
 # Create a grid of values for the interaction plot
 interaction_grid <- expand.grid(rolling_average_14 = rolling_range,
                                 total_mass_herbivore = mass_range,
+                                total_mass_nonherbivore = mean(binomial_df$total_mass_nonherbivore),
                                 mean_cover = mean(binomial_df$mean_cover),  # Set to the mean of mean_cover
                                 Reef = unique(binomial_df$Reef),  # Unique levels of Reef
                                 Month = unique(binomial_df$Month))  # Unique levels of Month
@@ -564,21 +597,22 @@ p7<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_1
 
 
 
+#not significant
+
 #MAIN RESULTS FIGURE
 ggarrange(p4, p7, p1, p2, p3, nrow=2, ncol=3) #save 16 x 10
 
 
 #FIGURE S1
 ## Testing if predictors are correlated for avg veg analysis
-# Create a subset of your data with only the predictor variables
-predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Ammonia", "Phosphate",
-                                     "Sillicate", "Chlorophyll", "total_mass_herbivore")]
+#predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Ammonia", "Phosphate",
+#                                     "Sillicate", "Chlorophyll", "total_mass_herbivore")]
 
 #For the mean veg model (hypothesis 1)
 predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Phosphate",
                                      "total_mass_herbivore")]
 
-colnames(predictors) <- c("SST", "Nitrate + Nitrite", "Phosphate", "Herbivore Biomass")
+colnames(predictors) <- c("SST", "Nitrate + nitrite", "Phosphate", "Herbivore biomass")
 
 
 # Calculate pairwise correlation coefficients
@@ -593,8 +627,8 @@ p1<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value
   theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1), text = element_text(size = 20))
 
 #hypotheses 2-4 (mean cover instead of nutrient predictors)
-predictors <- filtered_full_data[, c("rolling_average_14", "mean_cover", "total_mass_herbivore")]
-colnames(predictors) <- c("SST", "Mean vegetation cover", "Herbivore biomass")
+predictors <- filtered_full_data[, c("rolling_average_14", "mean_cover", "total_mass_herbivore", "total_mass_nonherbivore")]
+colnames(predictors) <- c("SST", "Mean vegetation cover", "Herbivore biomass", "Non herbivore biomass")
 
 # Calculate pairwise correlation coefficients
 correlation_matrix <- cor(predictors) 
@@ -610,6 +644,7 @@ p2<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value
 
 
 ###FIGURE S2
-ggarrange(p1, p2)
+figureS1 <- ggarrange(p1, p2)
 
+ggsave("~/Desktop/FkgureS1.png", plot = figureS1, width = 12, height = 6, bg = "transparent")
 
