@@ -74,7 +74,6 @@ ode_system_nutrients <- function(t, y, parms, nutrient_values2, slope) {
 }
 
 
-# Define initial conditions
 initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
 
 #repeating first 200 because of the 200 timestep burn in period
@@ -104,10 +103,8 @@ perform_sensitivity_analysis <- function(slope_values) {
 # Test sensitivity analysis 
 sensitivity_results <- perform_sensitivity_analysis(slope_values)
 
-# Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
-# Create a dataframe for each T_opt and store it in the list
 for (slope in names(sensitivity_results)) {
   out <- sensitivity_results[[slope]]
   df <- data.frame(Time = out[, 1], A = out[, 2], H = out[, 3], q = out[, 4])
@@ -115,10 +112,7 @@ for (slope in names(sensitivity_results)) {
   dataframes[[slope]] <- df
 }
 
-# Combine all dataframes into one
 combined_df <- do.call(rbind, dataframes)
-
-# Organize combined dataframe by T_opt
 combined_df <- combined_df[order(combined_df$slope, combined_df$Time), ]
 
 #calculate the q (seagrass growth rate) at each time step
@@ -191,10 +185,8 @@ q_values <- numeric(length(times))
 parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 sensitivity_results <- perform_sensitivity_analysis(slope_values)
 
-# Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
-# Create a dataframe for each T_opt and store it in the list
 for (slope in names(sensitivity_results)) {
   out <- sensitivity_results[[slope]]
   df <- data.frame(Time = out[, 1], A = out[, 2], H = out[, 3], q = out[, 4])
@@ -202,10 +194,7 @@ for (slope in names(sensitivity_results)) {
   dataframes[[slope]] <- df
 }
 
-# Combine all dataframes into one
 combined_df <- do.call(rbind, dataframes)
-
-# Organize combined dataframe by T_opt
 combined_df <- combined_df[order(combined_df$slope, combined_df$Time), ]
 
 q_values <- numeric(length(combined_df$Time))
@@ -229,8 +218,7 @@ a_gg2 <-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | 
         text = element_text(size = 20),
         legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
-  ggtitle("B. Cyclic baseline (R = 1.28)") #+
-  #scale_y_continuous(limits = c(0, 0.6))
+  ggtitle("B. Cyclic baseline (R = 1.28)")
 
 
 
@@ -249,15 +237,10 @@ h_gg2<-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | s
   ggtitle("") +
   scale_y_continuous(limits = c(0, 1))
 
-#Figure S3
-#ggarrange(a_gg, h_gg, a_gg2, h_gg2, nrow=2, ncol=2, common.legend = TRUE, legend="right") #12 x 8
-
 
 #Plot the nutrient time series
-# Create a data frame with your data
 nutrient_df <- data.frame(Time = times[-1], Nutrient = nutrient_values2)
 
-# Create the ggplot object
 nutrient_plot<-ggplot(nutrient_df %>% filter(Time >200), aes(x = Time-200, y = Nutrient)) +
   geom_line() +
   labs(x = "Time (days)", y = "Total N (ug/L)") +
@@ -265,7 +248,6 @@ nutrient_plot<-ggplot(nutrient_df %>% filter(Time >200), aes(x = Time-200, y = N
   ggtitle("D.")+
   theme(text = element_text(size = 20))
 
-#ggarrange(nutrient_plot, nutrient_function_plot, q_gg_nutrients, nrow=1, ncol=3, common.legend = TRUE, legend="right")
 
 
 

@@ -33,22 +33,16 @@ seagrass_growth <- function(sst, T_opt) {
   return(q)
 }
 
-# Define a sequence of x values
 x <- seq(5, 45, by = 0.1)
-
-# Define T_opt values from 20 to 30
 T_opt_values <- 20:30
 
-# Calculate y values for each T_opt value
 data_sg_list <- lapply(T_opt_values, function(T_opt) {
   y <- seagrass_growth(x, T_opt)
   data.frame(x = x, y = y, T_opt = as.factor(T_opt))
 })
 
-# Combine all dataframes into one
 data_sg <- do.call(rbind, data_sg_list)
 
-# Create the plot using ggplot2
 sst_function_plot <- ggplot(data_sg %>% filter(T_opt == 20 | T_opt == 24 | T_opt == 28), aes(x = x, y = y, color = T_opt)) +
   geom_line(size = 1.5) +
   scale_color_viridis_d()+
@@ -63,9 +57,8 @@ sst_function_plot <- ggplot(data_sg %>% filter(T_opt == 20 | T_opt == 24 | T_opt
 
 #################################### MODEL SET UP ####################################
 
-# Define the ODE system
 ode_system_sst <- function(t, y, parms, sst_values2, T_opt) {
-  sst <- sst_values2[which.min(abs(times - t))]  # Interpolate SST at the current time
+  sst <- sst_values2[which.min(abs(times - t))]  
   with(as.list(c(y, parms)), {
     if (t <= 200) {
       q <- 0.8
@@ -80,7 +73,6 @@ ode_system_sst <- function(t, y, parms, sst_values2, T_opt) {
 }
 
 
-# Define initial conditions
 initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
 sst_values2 <- c(sst_values[1:200], sst_values) #repeating first 30 since it won't use them the first time when there's no temp dependent q
 times <- seq(0, length(sst_values2), by=1)
@@ -89,11 +81,8 @@ q_values <- numeric(length(times))
 
 #################################### STABLE MODEL ####################################
 
-#Define parameters
 parameters <- c(A0 = 0.8, R = 0.13, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 
-#Sensitivity code
-# Define function for sensitivity analysis
 perform_sensitivity_analysis <- function(T_opt_values) {
   results <- list()
   for (T_opt in T_opt_values) {
@@ -105,14 +94,11 @@ perform_sensitivity_analysis <- function(T_opt_values) {
   return(results)
 }
 
-# Test sensitivity analysis for T_opt values from 20 to 30
 T_opt_values <- 20:30
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-# Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
-# Create a dataframe for each T_opt and store it in the list
 for (T_opt in names(sensitivity_results)) {
   out <- sensitivity_results[[T_opt]]
   df <- data.frame(Time = out[, 1], A = out[, 2], H = out[, 3], q = out[, 4])
@@ -120,10 +106,8 @@ for (T_opt in names(sensitivity_results)) {
   dataframes[[T_opt]] <- df
 }
 
-# Combine all dataframes into one
 combined_df <- do.call(rbind, dataframes)
 
-# Organize combined dataframe by T_opt
 combined_df <- combined_df[order(combined_df$T_opt, combined_df$Time), ]
 
 q_values <- numeric(length(combined_df$Time))
@@ -187,20 +171,16 @@ q_gg_sst<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_o
 
 #################################### CYCLIC MODEL ####################################
 
-# Define initial conditions
 initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
 times <- seq(0, length(sst_values2), by=1)
 q_values <- numeric(length(times))
 
-#Define parameters
 parameters <- c(A0 = 0.8, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03)
 
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-# Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
-# Create a dataframe for each T_opt and store it in the list
 for (T_opt in names(sensitivity_results)) {
   out <- sensitivity_results[[T_opt]]
   df <- data.frame(Time = out[, 1], A = out[, 2], H = out[, 3], q = out[, 4])
@@ -208,10 +188,8 @@ for (T_opt in names(sensitivity_results)) {
   dataframes[[T_opt]] <- df
 }
 
-# Combine all dataframes into one
 combined_df <- do.call(rbind, dataframes)
 
-# Organize combined dataframe by T_opt
 combined_df <- combined_df[order(combined_df$T_opt, combined_df$Time), ]
 
 q_values <- numeric(length(combined_df$Time))
@@ -255,7 +233,6 @@ h_gg2<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt 
 # PLOT SST DATA
 sst_df <- data.frame(Time = times[-1], SST = sst_values2)
 
-# Create the ggplot object
 sst_plot<-ggplot(sst_df %>% filter(Time > 200), aes(x = Time-200, y = SST)) +
   geom_line() +
   labs(x = "Time (days)", y = "SST (°C)") +
@@ -263,5 +240,3 @@ sst_plot<-ggplot(sst_df %>% filter(Time > 200), aes(x = Time-200, y = SST)) +
   ggtitle("A.")+
   theme(text = element_text(size = 20))
 
-#Figure 5
-ggarrange(a_gg, h_gg, a_gg2, h_gg2, nrow=2, ncol=2, common.legend = TRUE, legend="right") #12 x 8

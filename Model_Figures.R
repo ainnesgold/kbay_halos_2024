@@ -24,4 +24,3 @@ ggsave("~/Desktop/figure3bottom.png", figure3bottom, width = 14, height=5, bg="t
 figureS3<-ggarrange(a_gg, h_gg, a_gg2, h_gg2, nrow=2, ncol=2, common.legend = TRUE, legend="right")
 
 ggsave("~/Desktop/figureS3.png", figureS3, width = 10, height=8, bg="transparent")
-A

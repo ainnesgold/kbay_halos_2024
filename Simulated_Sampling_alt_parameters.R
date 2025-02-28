@@ -14,7 +14,6 @@ parameters <- c(A0 = 0.8, R = 0.13, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03
 
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-#
 # Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
@@ -86,7 +85,6 @@ p1<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("A. Fixed; Optimal SST = 24°C") +
   theme_minimal() +
@@ -106,7 +104,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
@@ -133,7 +131,6 @@ filtered_data <- filtered_data %>%
 
 
 # Create a sequence of time points at every 30 units
-#time points 2
 time_points2 <- seq(215, max(combined_df$Time), by = 30)
 
 # Calculate intersection points
@@ -182,7 +179,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
@@ -257,7 +254,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
@@ -332,7 +329,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
@@ -356,11 +353,8 @@ q_values <- numeric(length(times))
 #Define parameters
 parameters <- c(A0 = 0.5, R = 1.28, rc = 2, g = 2, s = 6, r = 8, k = 2, m = 0.03)
 
-
-
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-#
 # Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
@@ -411,7 +405,6 @@ filtered_data <- filtered_data %>%
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
-#time_points <- seq(min(filtered_data$Time), max(filtered_data$Time), by = 30)
 
 # Calculate intersection points
 intersection_points <- filtered_data %>%
@@ -439,7 +432,6 @@ p5<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("C. Cyclic; Optimal SST = 24°C") +
   theme_minimal() +
@@ -459,7 +451,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
@@ -532,7 +524,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 
@@ -605,7 +597,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points)
 
@@ -659,7 +651,6 @@ p7_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("D. Cyclic; Optimal SST = 28°C") +
   theme_minimal() +
@@ -679,7 +670,7 @@ overlay_data <- combined_df %>%
 
 overlay_data <- merge(overlay_data, sst_df, by = "Time")
 
-#filter only for where it intersects with survey points??
+#filter only for where it intersects with survey points
 overlay_data <- overlay_data %>%
   filter(Time %in% time_points2)
 

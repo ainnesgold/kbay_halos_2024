@@ -310,11 +310,11 @@ p11<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) +
 #ggarrange(p1, p2, p3, p5, p6, p7, p8, p9, p10, p4, nrow=4, ncol=3, common.legend = TRUE) #pdf 12 x 15
 #ggarrange(p1, p2, p3, NULL, p5, p6, p7, NULL, p8, p9, p10, p4, nrow=3, ncol=4, common.legend = TRUE) #pdf 12 x 15
 
-write.csv(full_data, "full_data.csv")
-write.csv(full_data_halos_only, "full_data_halos_only.csv")
+#write.csv(full_data, "full_data.csv")
+#write.csv(full_data_halos_only, "full_data_halos_only.csv")
 
 
-############ FIGURE S3 ####################
+############ FIGURE S2 ####################
 #just nutrients included in analysis
 figureS2 <- ggarrange(p1, p2, p3, p5, p6, p7, p8, p4, nrow=2, ncol=4, common.legend = TRUE)
  
@@ -597,16 +597,11 @@ p7<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_1
 
 
 
-#not significant
-
 #MAIN RESULTS FIGURE
 ggarrange(p4, p7, p1, p2, p3, nrow=2, ncol=3) #save 16 x 10
 
 
 #FIGURE S1
-## Testing if predictors are correlated for avg veg analysis
-#predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Ammonia", "Phosphate",
-#                                     "Sillicate", "Chlorophyll", "total_mass_herbivore")]
 
 #For the mean veg model (hypothesis 1)
 predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Phosphate",
@@ -646,5 +641,5 @@ p2<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value
 ###FIGURE S2
 figureS1 <- ggarrange(p1, p2)
 
-ggsave("~/Desktop/FkgureS1.png", plot = figureS1, width = 12, height = 6, bg = "transparent")
+ggsave("~/Desktop/FigureS1.png", plot = figureS1, width = 12, height = 6, bg = "transparent")
 
