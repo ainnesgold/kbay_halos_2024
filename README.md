@@ -1,6 +1,6 @@
 # kbay_halos_2024
 
-#This repo contains all the data and code needed to reproduce figures and analyses for the manuscript titled "Herbivory and temperature mediate coral reef halo dynamics".
+#This repo contains all the data and code needed to reproduce figures and analyses for the manuscript titled "Herbivory and temperature mediate coral reef halo dynamics". This study explores how herbivore biomass, temperature, and nutrients contribute to fluctuations in halo presence and size. We conducted a field study using artificial reefs, and used a consumer-resource model to simulate these effects as well.
 
 #Data:
 #All collected field data are in csv files in the data folder. 2022_noaa surveys is the NOAA buoy temperature data used for the two months of data lost by our loggers, fish surveys.csv is our fish survey data, three halo_data.csv files contain the halo measurements, length-weight.csv contains the length-weight relationships we used to convert abundance and length to biomass, nutrients_combined.csv is our collected nutrient data, and Temp_combined2.csv is our collected temperature data.

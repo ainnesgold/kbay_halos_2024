@@ -15,8 +15,7 @@ R_values <- c(0.13, 1.28)
 # Plot setup
 plot(A_values, f(A_values, parameters["A0"], parameters["rc"], R_values[1]), 
      type = "l", col = "blue", ylim = c(0, 1), 
-     ylab = "Term", xlab = "A", lwd = 2,
-     main = "Plot for Different R Values")
+     ylab = "Term", xlab = "A", lwd = 2)
 
 # Add second curve
 lines(A_values, f(A_values, parameters["A0"], parameters["rc"], R_values[2]), col = "red", lwd = 2)
