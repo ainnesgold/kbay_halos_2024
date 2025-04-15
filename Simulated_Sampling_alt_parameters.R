@@ -120,7 +120,6 @@ p2<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ######################### alternate time point sampling #####################################
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
@@ -159,7 +158,6 @@ p1_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("A. Fixed, Optimal SST = 24°C") +
   theme_minimal() +
@@ -196,7 +194,6 @@ p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ########################### HIGH 28 OPTIMAL TEMP #
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -271,7 +268,6 @@ p4<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 ######################### alternate time point sampling #####################################
 
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -341,7 +337,6 @@ p4_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
   theme_minimal() +
   theme(text = element_text(size = 20))
 
-#ggarrange(p1, p2, p3, p4, nrow=2, ncol=2)
 
 
 
@@ -539,7 +534,6 @@ p6_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ########################### HIGH 28 OPTIMAL TEMP #
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -577,7 +571,6 @@ p7<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("D. Cyclic; Optimal SST = 28°C") +
   theme_minimal() +
@@ -693,5 +686,7 @@ ggarrange(p1+rremove("xlab"),p3 +rremove("xlab"),p5 +rremove("xlab"),p7, nrow=4,
 ggarrange(p2+rremove("xlab"),p4+rremove("xlab"),p6+rremove("xlab"),p8, nrow=4, ncol=1)
 
 
-#Figure S5
-ggarrange(p1_extra, p2_extra, p3_extra, p4_extra, p5_extra, p6_extra, p7_extra, p8_extra, nrow=4, ncol=2)
+#Figure S5, alternate parameters
+FigureS5 <- ggarrange(p1_extra, p2_extra, p3_extra, p4_extra, p5_extra, p6_extra, p7_extra, p8_extra, nrow=4, ncol=2)
+
+ggsave("~/Desktop/FigureS5.png", plot = FigureS5, width = 16, height = 12, bg = "transparent")

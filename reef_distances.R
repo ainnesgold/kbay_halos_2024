@@ -1,6 +1,7 @@
 
-#
+
 ## calculate clark evans R
+
 # Load the spatstat package
 library(spatstat)
 # Load the leaflet package

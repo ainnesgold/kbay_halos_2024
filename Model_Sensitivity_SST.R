@@ -1,4 +1,7 @@
+
+#Run baseline model with no temperature dependencies
 source('Stable_Cycle_Baseline.R')
+
 #################################### TEMPERATURE DATA ####################################
 temp_raw <- read.csv("Data/Temp_combined.csv")
 temp_raw$avg_temp <- rowMeans(temp_raw[, c("Temp_S1", "Temp_S2", "Temp_S3")], na.rm = TRUE)
@@ -61,11 +64,12 @@ ode_system_sst <- function(t, y, parms, sst_values2, T_opt) {
   sst <- sst_values2[which.min(abs(times - t))]  
   with(as.list(c(y, parms)), {
     if (t <= 200) {
-      q <- 0.8
+      q <- 0.8 #contant during bun in period
     } else {
-      q <- 0.8 - 0.0037 * (sst - T_opt)^2
+      q <- 0.8 - 0.0037 * (sst - T_opt)^2 #temp dependent
       q <- ifelse(q < 0, 0, q)
     }
+    #base model equations
     dA <- q * A * (1 - A / (A0 * exp(-(R * (1 / rc) * (A0 - A))))) - ((g * A * H) / (1 + g * s * A))
     dH <- (r * A * H) / (1 + g * s * A) * (1 - H / ((1 - A0) * k)) - (m * H)
     return(list(c(dA, dH, q)))
@@ -74,7 +78,7 @@ ode_system_sst <- function(t, y, parms, sst_values2, T_opt) {
 
 
 initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
-sst_values2 <- c(sst_values[1:200], sst_values) #repeating first 30 since it won't use them the first time when there's no temp dependent q
+sst_values2 <- c(sst_values[1:200], sst_values) #repeating first 200 since it won't use them the first time when there's no temp dependent q, during the 200 day burn in
 times <- seq(0, length(sst_values2), by=1)
 q_values <- numeric(length(times))
 

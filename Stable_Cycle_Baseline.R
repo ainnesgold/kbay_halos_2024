@@ -1,4 +1,4 @@
-##Baseline (no temp, nutrients) model from Ong et al.
+##Baseline (no temp, nutrients) model from Ong et al. 2025
 
 library(deSolve)
 library(tidyverse)

@@ -15,7 +15,6 @@ parameters <- c(A0 = 0.8, R = 0.13, rc = 2, g = 2, s = 6, r = 8, k = 5, m = 0.03
 
 sensitivity_results <- perform_sensitivity_analysis(T_opt_values)
 
-#
 # Initialize an empty list to store dataframes for each T_opt
 dataframes <- list()
 
@@ -120,8 +119,6 @@ p2<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 
 ######################### alternate time point sampling #####################################
-
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
@@ -132,7 +129,6 @@ filtered_data <- filtered_data %>%
 
 
 # Create a sequence of time points at every 30 units
-#time points 2
 time_points2 <- seq(215, max(combined_df$Time), by = 30)
 
 # Calculate intersection points
@@ -161,7 +157,6 @@ p1_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("A. Fixed, Optimal SST = 24°C") +
   theme_minimal() +
@@ -196,8 +191,7 @@ p2_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 
 
-########################### HIGH 28 OPTIMAL TEMP #
-# Ensure no NA values and filter data for T_opt == 24
+########################### HIGH 28 OPTIMAL TEMP 
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -272,8 +266,6 @@ p4<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ######################### alternate time point sampling #####################################
 
-
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -403,7 +395,6 @@ filtered_data <- filtered_data %>%
 
 # Create a sequence of time points at every 30 units
 time_points <- seq(200, max(combined_df$Time), by = 30)
-#time_points <- seq(min(filtered_data$Time), max(filtered_data$Time), by = 30)
 
 # Calculate intersection points
 intersection_points <- filtered_data %>%
@@ -431,7 +422,6 @@ p5<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("C. Cyclic; Optimal SST = 24°C") +
   theme_minimal() +
@@ -467,7 +457,6 @@ p6<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ######################### alternate time point sampling #####################################
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 24) %>%
   filter(!is.na(A) & !is.na(H))
@@ -477,7 +466,6 @@ filtered_data <- filtered_data %>%
   mutate(A_scaled = scales::rescale(halosize, to = herbivore_limits2))
 
 # Create a sequence of time points at every 30 units
-#time points 2
 time_points2 <- seq(215, max(combined_df$Time), by = 30)
 
 # Calculate intersection points
@@ -506,7 +494,6 @@ p5_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("C. Cyclic; Optimal SST = 24°C") +
   theme_minimal() +
@@ -540,8 +527,6 @@ p6_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 
 ########################### HIGH 28 OPTIMAL TEMP #
-
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -579,7 +564,6 @@ p7<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("D. Cyclic; Optimal SST = 28°C") +
   theme_minimal() +
@@ -593,7 +577,6 @@ p7<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   )
 
 
-# Filter data for T_opt == 24 and Time in time_points
 overlay_data <- combined_df %>%
   filter(T_opt == 28)
 
@@ -615,7 +598,6 @@ p8<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
 
 ######################### alternate time point sampling #####################################
 
-# Ensure no NA values and filter data for T_opt == 24
 filtered_data <- combined_df %>%
   filter(T_opt == 28) %>%
   filter(!is.na(A) & !is.na(H))
@@ -630,7 +612,7 @@ time_points2 <- seq(215, max(combined_df$Time), by = 30)
 # Calculate intersection points
 intersection_points <- filtered_data %>%
   filter(Time %in% time_points2) %>%
-  select(Time, A_scaled, H) #%>%
+  select(Time, A_scaled, H) 
 
 # Combine the intersection points
 intersection_data <- melt(intersection_points, id.vars = "Time", variable.name = "Line")
@@ -653,7 +635,6 @@ p7_extra<-ggplot(filtered_data %>% filter(Time >=200), aes(x = Time-200)) +
   ) +
   geom_vline(xintercept = time_points2-200, linetype = "dashed", size = 0.5, color = "black") +
   geom_point(data = intersection_data, aes(x = Time-200, y = value, color = Line), size = 3) +
-  #geom_point(data = intersections, aes(x = Time, y = ifelse(Line == "Seagrass", scales::rescale(Value, to = herbivore_limits), Value), color = Line), size = 3) + 
   labs(x = "Time (days)", y = "Density", color = "Legend") +
   ggtitle("D. Cyclic; Optimal SST = 28°C") +
   theme_minimal() +
@@ -686,15 +667,21 @@ p8_extra<-ggplot(overlay_data, aes(x=H, y=SST, color = A0 - A)) +
   theme(text = element_text(size = 20))
 
 
-#Figure 6
-ggarrange(p1, p2, p3, p4, p5, p6, p7, p8, nrow=4, ncol=2) #saved 15 x 13F
+############### Figure 6
+Figure6_total <- ggarrange(p1, p2, p3, p4, p5, p6, p7, p8, nrow=4, ncol=2)
+
+ggsave("~/Desktop/Figure6.png", plot = Figure6_total, width = 16, height = 12, bg = "transparent")
 
 
-#panel one of figure 6
+#individual panels of figure 6
 ggarrange(p1+rremove("xlab"),p3 +rremove("xlab"),p5 +rremove("xlab"),p7, nrow=4, ncol=1)
 
 ggarrange(p2+rremove("xlab"),p4+rremove("xlab"),p6+rremove("xlab"),p8, nrow=4, ncol=1)
 
 
-#Figure S4
-ggarrange(p1_extra, p2_extra, p3_extra, p4_extra, p5_extra, p6_extra, p7_extra, p8_extra, nrow=4, ncol=2)
+################# Figure S4, alternate time points
+FigureS4 <- ggarrange(p1_extra, p2_extra, p3_extra, p4_extra, p5_extra, p6_extra, p7_extra, p8_extra, nrow=4, ncol=2)
+
+ggsave("~/Desktop/FigureS4.png", plot = FigureS4, width = 16, height = 12, bg = "transparent")
+
+

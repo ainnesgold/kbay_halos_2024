@@ -1,3 +1,10 @@
+
+##Field data analysis
+
+#This script contains all the statistical models and creates field data figures (Figures 4, S1, S2)
+
+
+#load packages
 library(mgcv)
 library(tidyverse)
 library(ggpubr)
@@ -57,6 +64,7 @@ mean_veg$threshold <- mean_veg$mean_cover - sd(mean_veg$mean_cover)
 mean_veg$threshold2 <- mean_veg$mean_cover - (2*sd(mean_veg$mean_cover))
 
 # Create the new column IsHalo
+#two versions based on 1 or 2 SDs different from the mean
 mean_veg$IsHalo <- ifelse(mean_veg$veg_cover > mean_veg$threshold, FALSE, TRUE)
 mean_veg$IsHalo2 <- ifelse(mean_veg$veg_cover > mean_veg$threshold2, FALSE, TRUE)
 
@@ -93,10 +101,8 @@ filtered_temp_mean <- temp_mean %>%
   filter(Date %in% raw$Date)
 filtered_temp_mean$rolling_average_14 <- (5/9) * (filtered_temp_mean$rolling_average_14 - 32)
 filtered_temp_mean$rolling_average_7 <- (5/9) * (filtered_temp_mean$rolling_average_7 - 32)
-#filtered_temp_mean$rolling_average_30 <- (5/9) * (filtered_temp_mean$rolling_average_30 - 32)
 filtered_temp_mean$rolling_max_14 <- (5/9) * (filtered_temp_mean$rolling_max_14 - 32)
 filtered_temp_mean$rolling_max_7 <- (5/9) * (filtered_temp_mean$rolling_max_7 - 32)
-#filtered_temp_mean$rolling_max_30 <- (5/9) * (filtered_temp_mean$rolling_max_30 - 32)
 filtered_temp_mean$daily_temp <- (5/9) * (filtered_temp_mean$daily_temp - 32)
 
 
@@ -131,10 +137,9 @@ noaa_2022 <- noaa_2022 %>%
 
 full_temp <- merge(filtered_temp_mean, noaa_2022, by = c("Date", "Day", "Month", "Year", "daily_temp", "rolling_average_14",
                                                          "rolling_average_7", "rolling_max_14", "rolling_max_7"), all = TRUE)
-# Assuming temp_mean is your dataframe
 full_temp <- full_temp %>%
-  arrange(Date, daily_temp) %>% # Sort by Date and Temperature
-  distinct(Date, .keep_all = TRUE)    # Keep unique Date, retaining highest temperature
+  arrange(Date, daily_temp) %>%
+  distinct(Date, .keep_all = TRUE)   
 
 #merge data
 full_data <- merge(result, full_temp, by = c("Month", "Year", "Day"), all = TRUE)
@@ -150,12 +155,11 @@ full_data <- merge(full_data, nutrient_raw, by = c("Month", "Year", "Reef"), all
 
 
 
-
 ############################# FISH #################################################
 full_data <- merge(full_data,  fishlw_sum,
                    by = c("Month", "Reef", "Year"), all = TRUE)
 
-###Halo data ONLY
+###Halo data ONLY - for analyses looking only at observations with halos
 halo_veg <- merge(result, mean_veg)
 
 halo_veg <- halo_veg %>%
@@ -306,21 +310,13 @@ p11<-ggplot(full_data, aes(x = Date, y = Chlorophyll, color = Reef)) +
     axis.text.x = element_text(angle = 45, hjust = 1)# Set axis text size to 20
   )
 
-#all nutrients included
-#ggarrange(p1, p2, p3, p5, p6, p7, p8, p9, p10, p4, nrow=4, ncol=3, common.legend = TRUE) #pdf 12 x 15
-#ggarrange(p1, p2, p3, NULL, p5, p6, p7, NULL, p8, p9, p10, p4, nrow=3, ncol=4, common.legend = TRUE) #pdf 12 x 15
-
-#write.csv(full_data, "full_data.csv")
-#write.csv(full_data_halos_only, "full_data_halos_only.csv")
-
 
 ############ FIGURE S2 ####################
-#just nutrients included in analysis
 figureS2 <- ggarrange(p1, p2, p3, p5, p6, p7, p8, p4, nrow=2, ncol=4, common.legend = TRUE)
  
 ggsave("~/Desktop/FigureS2.png", plot = figureS2, width = 14, height = 8, bg = "transparent")
 
-#can save as csvs
+#can save as csvs if needed
 #write.csv(full_data, "full_data.csv")
 #write.csv(full_data_halos_only, "full_data_halos_only.csv")
 
@@ -363,11 +359,11 @@ smooth_table <- smooth_terms %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
   add_header_above(c("Halo Width - Smooth Terms" = 5))
 
-# Display the tables in your R environment
+# Display the tables
 fixed_table
 smooth_table
 
-#Plot of significant predictor
+# Plot of significant predictor
 p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) + 
   geom_point(position="jitter") +
   geom_smooth(method = "gam") +
@@ -375,9 +371,9 @@ p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) +
   ggtitle("C.")+
   theme_minimal() +
   theme(
-    text = element_text(size = 20),  # Set text size to 20
-    axis.title = element_text(size = 20),  # Set axis title size to 20
-    axis.text = element_text(size = 20)  # Set axis text size to 20
+    text = element_text(size = 20), 
+    axis.title = element_text(size = 20),  
+    axis.text = element_text(size = 20)  
   )
 
 
@@ -388,7 +384,7 @@ p1<-ggplot(full_data_halos_only, aes(x = rolling_average_14, y = halosize)) +
 
 ################################# HALO VEG DENSITY #############################################
 
-#mixed effects
+# GAM
 m1_gam <- gam(cbind(I(round(halo_veg_cover*100)), 100)  ~ s(mean_cover, k=3) +
                 rolling_average_14 +
                 total_mass_herbivore +
@@ -419,7 +415,7 @@ smooth_table <- smooth_terms %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
   add_header_above(c("Halo Veg Density - Smooth Terms" = 5))
 
-# Display the tables in your R environment
+######## Supplemental Tables 
 fixed_table
 smooth_table
 
@@ -432,19 +428,19 @@ p2<-ggplot(full_data_halos_only, aes(x = mean_cover, y = halo_veg_cover)) +
   ggtitle("D.")+
   theme_minimal() +
   theme(
-    text = element_text(size = 20),  # Set text size to 20
-    axis.title = element_text(size = 20),  # Set axis title size to 20
-    axis.text = element_text(size = 20)  # Set axis text size to 20
+    text = element_text(size = 20), 
+    axis.title = element_text(size = 20),  
+    axis.text = element_text(size = 20)  
   )
 
 #Making a heatmap for the interaction
-# Define the range of values for rolling_average_14 and total_mass_herbivore
 rolling_range <- seq(min(full_data_halos_only$rolling_average_14), max(full_data_halos_only$rolling_average_14), length.out = 100)
 mass_range <- seq(min(full_data_halos_only$total_mass_herbivore), max(full_data_halos_only$total_mass_herbivore), length.out = 100)
 
 # Create a grid of values for the interaction plot
 interaction_grid <- expand.grid(rolling_average_14 = rolling_range,
                                 total_mass_herbivore = mass_range,
+                                total_mass_nonherbivore = mean(full_data_halos_only$total_mass_nonherbivore), # Set to the mean of nonherbivores
                                 mean_cover = mean(full_data_halos_only$mean_cover),  # Set to the mean of mean_cover
                                 Reef2 = unique(full_data_halos_only$Reef2),  # Unique levels of Reef
                                 Month = unique(full_data_halos_only$Month))  # Unique levels of Month
@@ -456,15 +452,15 @@ interaction_grid$predicted_prob <- predict(m1_gam, newdata = interaction_grid, t
 p3<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_14)) +
   geom_tile(aes(fill = predicted_prob)) +
   scale_fill_viridis_c(name = "Halo vegetation cover (%)", direction=-1, 
-                       breaks = c(0.0, 0.1, 0.2),  # Specify desired breaks
+                       breaks = c(0.0, 0.1, 0.2),
                        labels = c(0, 0.1, 0.2)) + 
   labs(x = expression('Herbivorous fish biomass (g/m'^2*')'), y = "SST (°C)") +
   ggtitle("E.")+
   theme_minimal() +
   theme(legend.position="top",
-        text = element_text(size = 20),  # Set text size to 20
-        axis.title = element_text(size = 20),  # Set axis title size to 20
-        axis.text = element_text(size = 20)  # Set axis text size to 20
+        text = element_text(size = 20),
+        axis.title = element_text(size = 20), 
+        axis.text = element_text(size = 20)  
   )
 
 
@@ -474,10 +470,11 @@ p3<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_1
 
 ############################## MEAN VEGETATION #############################################
 
-#one crazy outlier for phosphate, filtered it out here
+# one massive outlier for phosphate, filtered it out here
 filtered_full_data <- full_data %>%
   filter(Phosphate < 0.2)
 
+# mixed effects model
 m1_lme <- glmer(
   cbind(I(round(mean_cover * 100)), 100) ~
     rolling_average_14 +
@@ -485,28 +482,24 @@ m1_lme <- glmer(
     N.N + 
     Phosphate +
     rolling_average_14 * total_mass_herbivore +
-    (1 | Reef) + (1 | Month),  # Random intercepts for Month nested within Reef2
+    (1 | Reef) + (1 | Month), 
   family = binomial,
   data = filtered_full_data
 )
 summary(m1_lme)
 
-
-
-#table of results
+# table of results
 model_summary <- tidy(m1_lme)
 
-#Table S2
+########## Supplemental Table
 model_summary %>%
   kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
-  add_header_above(c("Mean Vegetation Model Output" = 7))  # Adding a header
-
-
+  add_header_above(c("Mean Vegetation Model Output" = 7)) 
 
 
 #checking residuals
-plot(m1_lme, which = 1)  # Residuals vs. Fitted
+plot(m1_lme, which = 1) 
 residuals <- residuals(m1_lme)
 # Q-Q plot
 qqnorm(residuals)
@@ -530,10 +523,12 @@ p4<-ggplot(filtered_full_data, aes(x = rolling_average_14, y = mean_cover)) +
 
 ################### HALO PRESENCE ###################
 
-# Assuming 'halosize1' is the column name in the dataframe
+#creating a binomial dataframe for halo presence
 binomial_df <- full_data
 binomial_df$binom_halo1 <- ifelse(binomial_df$halosize > 0, 1, 0)
 binomial_df$binom_halo2 <- ifelse(binomial_df$halosize2 > 0, 1, 0)
+
+#using halosize1 (1 SD difference) as the response - not many observations qualified as halos if using the 2 SD cutoff
 
 binom_m1 <- glmer(binom_halo1 ~ rolling_average_14 + total_mass_herbivore + total_mass_nonherbivore + mean_cover +
                     rolling_average_14 * total_mass_herbivore +
@@ -544,7 +539,7 @@ hist(binomial_df$binom_halo1)
 #table of results
 model_summary <- tidy(binom_m1)
 
-#Table S3
+########## Supplemental table
 model_summary %>%
   kbl(digits = 3, col.names = c("Effect", "Group", "Term", "Estimate", "Std. Error", "Z value", "p-value")) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = F) %>%
@@ -558,20 +553,19 @@ ggplot(binomial_df, aes(x = total_mass_herbivore, y = binom_halo1)) +
   geom_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) +
   theme_minimal() +
   theme(
-    text = element_text(size = 20),  # Set text size to 20
-    axis.title = element_text(size = 20),  # Set axis title size to 20
-    axis.text = element_text(size = 20)  # Set axis text size to 20
+    text = element_text(size = 20),  
+    axis.title = element_text(size = 20),  
+    axis.text = element_text(size = 20)  
   )
 
 #Interaction plot
-# Define the range of values for rolling_average_14 and total_mass_herbivore
 rolling_range <- seq(min(binomial_df$rolling_average_14), max(binomial_df$rolling_average_14), length.out = 100)
 mass_range <- seq(min(binomial_df$total_mass_herbivore), max(binomial_df$total_mass_herbivore), length.out = 100)
 
 # Create a grid of values for the interaction plot
 interaction_grid <- expand.grid(rolling_average_14 = rolling_range,
                                 total_mass_herbivore = mass_range,
-                                total_mass_nonherbivore = mean(binomial_df$total_mass_nonherbivore),
+                                total_mass_nonherbivore = mean(binomial_df$total_mass_nonherbivore), # Set to the mean of nonherivore
                                 mean_cover = mean(binomial_df$mean_cover),  # Set to the mean of mean_cover
                                 Reef = unique(binomial_df$Reef),  # Unique levels of Reef
                                 Month = unique(binomial_df$Month))  # Unique levels of Month
@@ -583,25 +577,27 @@ interaction_grid$predicted_prob <- predict(binom_m1, newdata = interaction_grid,
 p7<-ggplot(interaction_grid, aes(x = total_mass_herbivore, y = rolling_average_14)) +
   geom_tile(aes(fill = predicted_prob)) +
   scale_fill_viridis_c(name = "Halo probability", option = "magma", 
-                       breaks = c(0.25, 0.5, 0.75),  # Specify desired breaks
+                       breaks = c(0.25, 0.5, 0.75), 
                        labels = c(0.25, 0.5, 0.75)) + 
   labs(x = expression('Herbivorous fish biomass (g/m'^2*')'), y = "SST (°C)") +
   theme_minimal() +
   ggtitle("B.")+
   theme(legend.position="top",
-        text = element_text(size = 20),  # Set text size to 20
-        axis.title = element_text(size = 20),  # Set axis title size to 20
-        axis.text = element_text(size = 20),  # Set axis text size to 20
+        text = element_text(size = 20), 
+        axis.title = element_text(size = 20), 
+        axis.text = element_text(size = 20),
         legend.text = element_text(size = 12)
   )
 
 
 
-#MAIN RESULTS FIGURE
-ggarrange(p4, p7, p1, p2, p3, nrow=2, ncol=3) #save 16 x 10
+########## FIGURE 4
+figure4_final <- ggarrange(p4, p7, p1, p2, p3, nrow=2, ncol=3) 
+
+ggsave("~/Desktop/Figure4.png", plot = figure4_final, width = 12, height =8, bg = "transparent")
 
 
-#FIGURE S1
+########### Making FIGURE S1
 
 #For the mean veg model (hypothesis 1)
 predictors <- filtered_full_data[, c("rolling_average_14", "N.N", "Phosphate",
@@ -613,6 +609,7 @@ colnames(predictors) <- c("SST", "Nitrate + nitrite", "Phosphate", "Herbivore bi
 # Calculate pairwise correlation coefficients
 correlation_matrix <- cor(predictors) 
 print(correlation_matrix)
+
 # Create heatmap of correlation matrix
 p1<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value)) +
   geom_tile() +
@@ -638,7 +635,7 @@ p2<-ggplot(data = melt(correlation_matrix), aes(x = Var1, y = Var2, fill = value
 
 
 
-###FIGURE S2
+###FIGURE S1
 figureS1 <- ggarrange(p1, p2)
 
 ggsave("~/Desktop/FigureS1.png", plot = figureS1, width = 12, height = 6, bg = "transparent")

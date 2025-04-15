@@ -19,7 +19,7 @@ nutrient_sorted$avg_NN_ug <- nutrient_sorted$avg_NN * 54.00495 #avg of nitrate a
 nutrient_sorted$avg_ammonia_ug <- nutrient_sorted$avg_ammonia * 17.031 #ammonia molar mass, to convert ammonia from umol to ug
 nutrient_sorted$inorganic_N_ug <- nutrient_sorted$avg_ammonia_ug + nutrient_sorted$avg_NN_ug
 
-#Selecting totalN
+#Selecting total N to use as nutrient input
 nutrient_values <- nutrient_sorted$avg_total_N_ug
 
 #################################### NUTRIENT DEPENDENT SEAGRASS GROWTH FUNCTION ####################################
@@ -62,11 +62,12 @@ ode_system_nutrients <- function(t, y, parms, nutrient_values2, slope) {
   nutrients <- nutrient_values2[which.min(abs(times - t))]
   with(as.list(c(y, parms)), {
     if (t <= 200) {
-      q <- 0.8
+      q <- 0.8 #constant during burn in period
     } else {
-      q <- 1 / (1.25 + exp(slope * nutrients))
+      q <- 1 / (1.25 + exp(slope * nutrients)) #nutrient dependent
       q <- ifelse(q < 0, 0, q)
     }
+    #base model equations
     dA <- q * A * (1 - A / (A0 * exp(-(R * (1 / rc) * (A0 - A))))) - ((g * A * H) / (1 + g * s * A))
     dH <- (r * A * H) / (1 + g * s * A) * (1 - H / ((1 - A0) * k)) - (m * H)
     return(list(c(dA, dH, q)))
@@ -115,7 +116,7 @@ for (slope in names(sensitivity_results)) {
 combined_df <- do.call(rbind, dataframes)
 combined_df <- combined_df[order(combined_df$slope, combined_df$Time), ]
 
-#calculate the q (seagrass growth rate) at each time step
+#calculate the q (vegetation growth rate) at each time step
 q_values <- numeric(length(combined_df$Time))
 q_values[1] = combined_df$q[1]
 for (i in 2:length(combined_df$Time)) {
@@ -137,10 +138,9 @@ a_gg <- ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 |
   labs(x="Time (days)", y = "Relative halo width") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
-        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+        legend.key.height = unit(1.5, "lines")) +  
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
-  ggtitle("A. Fixed baseline (R = 0.13)") #+
-  #scale_y_continuous(limits = c(0, 0.6))
+  ggtitle("A. Fixed baseline (R = 0.13)")
 
 #herbivore plot
 h_gg<-ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 | slope == -0.0075 | slope == -0.0425), 
@@ -153,7 +153,7 @@ h_gg<-ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -0.0025 | s
   labs(x="Time (days)", y = "Herbivore density") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
-        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+        legend.key.height = unit(1.5, "lines")) +  
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
   ggtitle("") +
   scale_y_continuous(limits = c(0, 1))
@@ -167,7 +167,7 @@ q_gg_nutrients<-ggplot(combined_df %>% filter(Time >= 200) %>% filter(slope == -
   labs(x="Time (days)", y = "Vegetaion growth rate") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
-        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+        legend.key.height = unit(1.5, "lines")) + 
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
   ggtitle("F.") +
   geom_hline(yintercept = 0.8, linetype = "dashed", color = "black", size = 1)
@@ -216,7 +216,7 @@ a_gg2 <-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | 
   labs(x="Time (days)", y = "Relative halo width") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
-        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+        legend.key.height = unit(1.5, "lines")) +  
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
   ggtitle("B. Cyclic baseline (R = 1.28)")
 
@@ -232,7 +232,7 @@ h_gg2<-ggplot(combined_df %>% filter(Time > 200) %>% filter(slope == -0.0025 | s
   labs(x="Time (days)", y = "Herbivore density") +
   theme(legend.position = "right", 
         text = element_text(size = 20),
-        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+        legend.key.height = unit(1.5, "lines")) + 
   guides(color = guide_legend(label.wrap = 20, title="Nutrient function slope")) +
   ggtitle("") +
   scale_y_continuous(limits = c(0, 1))
