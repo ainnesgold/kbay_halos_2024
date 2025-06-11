@@ -173,6 +173,13 @@ q_gg_sst<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_o
   geom_hline(yintercept = 0.8, linetype = "dashed", color = "black", size = 1)
 
 
+
+
+fixedplot <- ggarrange(a_gg + rremove("legend"), h_gg + rremove("legend"))
+ggsave("~/Desktop/fixed_plot.png", fixedplot, width = 10, height = 6, bg = "transparent")
+
+
+
 #################################### CYCLIC MODEL ####################################
 
 initial_conditions <- c(A = 0.5, H = 0.434, q=0.8)
@@ -234,6 +241,9 @@ h_gg2<-ggplot(combined_df %>% filter(Time >=200) %>% filter(T_opt == 20 | T_opt 
   scale_y_continuous(limits = c(0, 1))
 
 
+cyclicplot <- ggarrange(a_gg2 + rremove("legend"), h_gg2 + rremove("legend"))
+ggsave("~/Desktop/cyclic_plot.png", cyclicplot, width = 10, height = 6, bg = "transparent")
+
 # PLOT SST DATA
 sst_df <- data.frame(Time = times[-1], SST = sst_values2)
 
@@ -243,4 +253,77 @@ sst_plot<-ggplot(sst_df %>% filter(Time > 200), aes(x = Time-200, y = SST)) +
   theme_minimal() +
   ggtitle("A.")+
   theme(text = element_text(size = 20))
+
+
+
+
+
+
+
+#empty plots for presentation
+#stable
+p1<-ggplot() +
+  geom_line(data = solution_stable%>% filter(time >=200), aes(x = time-200, y = A0 - A_stable_baseline), 
+            color = "black", linetype = "dashed", size = 1) +
+  theme_minimal() +
+  labs(x="Time (days)", y = "Relative halo width") +
+  theme(legend.position = "right", 
+        text = element_text(size = 20),
+        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+  guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
+  ggtitle("A. Fixed baseline (R = 0.13)") +
+  scale_y_continuous(limits = c(0.2, 0.8))
+
+p2<-ggplot() +
+  geom_line(data = solution_stable%>% filter(time >=200), aes(x = time-200, y = H_stable_baseline), 
+            color = "black", linetype = "dashed", size = 1) +
+  theme_minimal() +
+  labs(x="Time (days)", y = "Herbivore density") +
+  theme(legend.position = "right", 
+        text = element_text(size = 20),
+        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+  guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
+  ggtitle("") +
+  scale_y_continuous(limits = c(0, 1))
+
+fixedempty <- ggarrange(p1,p2)
+
+
+ggsave("~/Desktop/fixedempty.png", fixedempty, width = 10, height = 6, bg = "transparent")
+
+
+p3<-ggplot() +
+  geom_line(data = solution_cycles%>% filter(time >=200), aes(x = time-200, y = A0 - A_cycles_baseline), 
+            color = "black", linetype = "dashed", size = 1) +
+  theme_minimal() +
+  labs(x="Time (days)", y = "Relative halo width") +
+  theme(legend.position = "right", 
+        text = element_text(size = 20),
+        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+  guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
+  ggtitle("B. Cyclic baseline (R = 1.28)") +
+  scale_y_continuous(limits = c(0.2, 0.8))
+
+
+p4<-ggplot() +
+  geom_line(data = solution_cycles %>% filter(time >=200), aes(x = time-200, y = H_cycles_baseline), 
+            color = "black", linetype = "dashed", size = 1) +
+  theme_minimal() +
+  labs(x="Time (days)", y = "Herbivore density") +
+  theme(legend.position = "right", 
+        text = element_text(size = 20),
+        legend.key.height = unit(1.5, "lines")) +  # Adjust legend key height for more space
+  guides(color = guide_legend(label.wrap = 20, title="Optimal SST")) +
+  ggtitle("") +
+  scale_y_continuous(limits = c(0, 1))
+
+cyclicempty <- ggarrange(p3,p4)
+
+ggsave("~/Desktop/cyclicempty.png", cyclicempty, width = 10, height = 6, bg = "transparent")
+
+
+
+
+#
+
 
