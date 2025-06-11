@@ -2,6 +2,8 @@
 
 #This repo contains all the data and code needed to reproduce figures and analyses for the manuscript titled "Herbivory and temperature mediate coral reef halo dynamics". 
 #This study explores how herbivore biomass, temperature, and nutrients contribute to fluctuations in halo presence and size. We conducted a field study using artificial reefs, and used a consumer-resource model to simulate these effects as well.
+#Authors: Anne A. Innes-Gold*, Lisa C. McManus, Emily Lester, Theresa W. Ong, Aimee Cook McNab, Sophia A. Rahnke, Joshua Brett Pablo, Ann Tokoyoda, Dava Watson, Elizabeth M.P. Madin
+# *corresponding author: ainnesgo@hawaii.edu
 
 #Data:
 #All collected field data are in csv files in the data folder. 
